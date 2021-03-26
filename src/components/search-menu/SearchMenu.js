@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 
 export const openLibUrl = {
-  prefix: 'https://openlibrary.org/works/',
+  worksPrefix: 'https://openlibrary.org/works/',
+  authorsPrefix: 'https://openlibrary.org/authors/',
   suffix: '.json',
 };
 
@@ -22,7 +23,7 @@ export default class SearchMenu extends React.Component {
 
   fetchBookInfo() {
     let urlString =
-      openLibUrl.prefix + this.state.olid + openLibUrl.suffix;
+      openLibUrl.worksPrefix + this.state.olid + openLibUrl.suffix;
 
     console.log(urlString);
 
@@ -48,10 +49,12 @@ export default class SearchMenu extends React.Component {
         //description =
 
         let newBook = {
+          id: '',
           title: '',
-          publishingYear: 0,
+          publishingYear: 2000,
           author: '',
           description: '',
+          dateAdded: Date.now(),
         };
 
         let bookProperties = [];
@@ -88,12 +91,10 @@ export default class SearchMenu extends React.Component {
           authorsStringPrefix.length,
           bookKey.length,
         );
+        let authorName = this.fetchAuthorName(OLID);
+        console.log(authorName);
 
-        console.log('FETCHING AUTHOR NAME');
-
-        let test = this.fetchAuthorName(OLID);
-
-        console.log('FETCHED AUTHOR NAME', test);
+        console.log('AUTHOR NAME: ', authorName);
       } else if (propertyName == 'description') {
       }
     });
@@ -104,14 +105,14 @@ export default class SearchMenu extends React.Component {
   }
 
   fetchAuthorName(OLID) {
-    let urlString = openLibUrl.prefix + OLID + openLibUrl.suffix;
+    let urlString =
+      openLibUrl.authorsPrefix + OLID + openLibUrl.suffix;
 
-    //TODO - replace by urlString
     axios
-      .get('https://openlibrary.org/works/OL10434636W.json')
+      .get(urlString)
       .then((res) => {
-        console.log('res', res);
-        return res;
+        let authorName = res.data.name;
+        return authorName;
       })
       .catch((error) => {
         console.log(error);

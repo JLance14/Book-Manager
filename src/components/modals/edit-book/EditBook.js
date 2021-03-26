@@ -102,7 +102,6 @@ export default class EditBook extends React.Component {
               margin="dense"
               id="description"
               label="Description"
-              rows={3}
               rowsMax={Infinity}
               multiline={true}
               value={description}

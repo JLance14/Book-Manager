@@ -40,7 +40,7 @@ export const defaultBooks = [
     dateAdded: 1616719971604,
   },
   {
-    id: 'OL10434789N',
+    id: 'OL10434503M',
     title: 'Into The Wild',
     publishingYear: 2007,
     author: 'Sean Penn',
@@ -77,11 +77,19 @@ export default class BookManager extends React.Component {
   };
 
   updateSortOption = (option) => {
-    this.setState({ currentSortOption: option });
-    this.sortList();
+    //Wait for setState to finish and call shortList()
+    this.setState(
+      {
+        currentSortOption: option,
+      },
+      () => {
+        this.sortList();
+      },
+    );
   };
 
   componentDidMount() {
+    //Sort books on Mount
     this.sortList();
   }
 
@@ -89,26 +97,26 @@ export default class BookManager extends React.Component {
   sortList() {
     const { books, currentSortOption } = this.state;
 
+    let sortedBooks = books;
+
     //Ascending sort
     if (currentSortOption == sortOptions.titleAscending) {
-      books.sort((a, b) => {
-        return b.title.localeCompare(a.title);
+      sortedBooks.sort(function (a, b) {
+        return a.title.localeCompare(b.title);
       });
     }
     //Descending sort
     else if (currentSortOption == sortOptions.titleDescending) {
-      books.sort((a, b) => {
-        return a.title.localeCompare(b.title);
+      sortedBooks.sort(function (a, b) {
+        return b.title.localeCompare(a.title);
       });
     }
     //orderAdded sort
     else {
-      books.sort((a, b) => {
+      sortedBooks.sort(function (a, b) {
         return b.dateAdded - a.dateAdded;
       });
     }
-
-    var sortedBooks = books;
 
     this.setState({ books: sortedBooks });
   }

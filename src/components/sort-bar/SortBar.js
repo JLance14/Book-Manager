@@ -36,18 +36,16 @@ export default class SortBar extends React.Component {
               className={menuClass}
               aria-labelledby="dropdownMenuButton"
             >
-              {Object.values(this.props.sortOptions).map(
-                (value, index) => (
-                  <a
-                    className="dropdown-item"
-                    href="#nogo"
-                    key={index}
-                    onClick={() => this.props.updateSortOption(value)}
-                  >
-                    {value}
-                  </a>
-                ),
-              )}
+              {Object.values(sortOptions).map((value, index) => (
+                <a
+                  className="dropdown-item"
+                  href="#nogo"
+                  key={index}
+                  onClick={() => this.props.updateSortOption(value)}
+                >
+                  {value}
+                </a>
+              ))}
             </div>
           </div>
         </div>

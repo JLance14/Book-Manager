@@ -43,17 +43,12 @@ export default class SearchMenu extends React.Component {
           bookData,
         ).filter((property) => requiredInfo.includes(property[0]));
 
-        //title =
-        //publishingYear =
-        //author =
-        //description =
-
         let newBook = {
-          id: '',
-          title: '',
-          publishingYear: 2000,
-          author: '',
-          description: '',
+          id: 0,
+          title: 'unknown',
+          published: 0,
+          author: 'unknown',
+          description: 'No description available',
           dateAdded: Date.now(),
         };
 

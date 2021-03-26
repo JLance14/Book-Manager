@@ -11,32 +11,44 @@ export default class EditBook extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('BOOKINFO', props.bookInfo);
-
     this.state = {
-      //todo
       id: props.bookInfo.id,
       title: props.bookInfo.title,
-      published: props.bookInfo.publishingYear,
+      published: props.bookInfo.published,
       author: props.bookInfo.author,
       description: props.bookInfo.description,
+      dateAdded: props.bookInfo.dateAdded,
     };
-
-    //this.handleUserInput = this.handleUserInput.bind(this);
   }
 
+  //Assign new values for book properties
   handleUserInput = (event, field) => {
-    console.log(event);
-
-    console.log(event.target.value);
     this.setState({ [field]: event.target.value });
   };
 
-  // handleBookChange = (field, value) => {
-  //   console.log(field);
-  //   alert(value);
-  //   this.setState({ [field]: value });
-  // };
+  saveBookInfoModification = () => {
+    const {
+      id,
+      title,
+      author,
+      published,
+      description,
+      dateAdded,
+    } = this.state;
+
+    //Book after user modifications
+    let updatedBook = {
+      id: id,
+      title: title,
+      author: author,
+      published: published,
+      description: description,
+      dateAdded: dateAdded,
+    };
+
+    this.props.editBookInfo(updatedBook);
+    this.props.closeDialog();
+  };
 
   render() {
     const { id, title, author, published, description } = this.state;
@@ -44,10 +56,7 @@ export default class EditBook extends React.Component {
     return (
       <Fragment>
         <Dialog
-          /* open={this.state.open}
-        onClose={this.handleToggle} */
           open={true}
-          //onClose={() => props.closeDialog}
           id="addWalletDialog"
           fullWidth={true}
           maxWidth={'md'}
@@ -57,16 +66,7 @@ export default class EditBook extends React.Component {
             Book Info
           </DialogTitle>
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="ID"
-              label="ID"
-              value={id}
-              onChange={(e) => this.handleUserInput(e, 'id')}
-              fullWidth
-            />
-
+            <h5>ID: {id}</h5>
             <TextField
               autoFocus
               margin="dense"
@@ -110,7 +110,10 @@ export default class EditBook extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.closeDialog} color="primary">
+            <Button
+              onClick={this.saveBookInfoModification}
+              color="primary"
+            >
               Save
             </Button>
             <Button

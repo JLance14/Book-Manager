@@ -1,1 +1,4 @@
-
+#add_book_input {
+  background-color: rgba(0, 0, 0, 0.125);
+  font-weight: bold;
+}

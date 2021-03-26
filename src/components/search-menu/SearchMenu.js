@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import './style.css';
 
 export const openLib = {
   worksURLPrefix: 'https://openlibrary.org/books/',

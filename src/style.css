@@ -1,1 +1,17 @@
+.btn-primary,
+.btn-primary:active,
+.btn-primary:hover {
+  background-color: #2f1f87 !important;
+  border-color: #2f1f87 !important;
+}
 
+.btn-danger,
+.btn-danger:active,
+.btn-danger:hover {
+  background-color: #960e11 !important;
+  border-color: #960e11 !important;
+}
+
+.card {
+  outline-style: groove !important;
+}

@@ -65,9 +65,6 @@ export default class EditBook extends React.Component {
           <h2 className="text-center mt-5 font-weight-bold">
             EDIT BOOK
           </h2>
-          {/* <DialogTitle className="text-center" id="form-dialog-title">
-            Book Info
-          </DialogTitle> */}
           <DialogContent>
             <h5>ID: {id}</h5>
             <TextField

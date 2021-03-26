@@ -8,26 +8,29 @@ import SortBar from 'components/sort-bar/SortBar';
 export const defaultBooks = [
   {
     id: 'OL10434104Z',
-    title: 'Harry Potter',
+    title: "Harry Potter and the Philosopher's Stone",
     author: 'J.K Rowling',
-    published: 1996,
-    description: 'Young wizard going to Poudlard.',
+    published: 2001,
+    description:
+      'Harry Potter, an eleven-year-old orphan, discovers that he is a wizard and is invited to study at Hogwarts. Even as he escapes a dreary life and enters a world of magic, he finds trouble awaiting him.',
     dateAdded: 1616719846821,
   },
   {
     id: 'OL10434503M',
-    title: 'Harry Potter 2',
-    author: 'J.K Rowling',
-    published: 1999,
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    author: 'J. R. R. Tolkien',
+    published: 2001,
     description: 'Teenage wizard in Poudlard.',
     dateAdded: 1616719908151,
   },
   {
     id: 'OL10434875U',
-    title: 'Harry Potter 3',
-    author: 'J.K Rowling',
-    published: 2003,
-    description: 'Grown up wizard after Poudlard.',
+    title:
+      "The Push: A Climber's Journey of Endurance, Risk, and Going Beyond Limits",
+    author: 'Tommy Caldwell',
+    published: 2017,
+    description:
+      'The Push is an arresting story of focus, drive, motivation, endurance, and transformation, a book that will appeal to anyone seeking to overcome fear and doubt, cultivate perseverance, turn failure into growth, and find connection with family and with the natural world.',
     dateAdded: 1616720009037,
   },
   {
@@ -35,7 +38,8 @@ export const defaultBooks = [
     title: 'Post Office',
     author: 'Charles Bukowski',
     published: 1971,
-    description: 'Story of an unconventional postman',
+    description:
+      "Post Office introduces Bukowski's autobiographical alter-ego, Henry Chinaski. It covers the period of Bukowski's life from about 1952 to his resignation from the United States Postal Service three years later, to his return in 1958 and then to his final resignation in 1969.",
     dateAdded: 1616719971604,
   },
   {
@@ -84,18 +88,6 @@ export default class BookManager extends React.Component {
     }
 
     this.sortBooks();
-  };
-
-  updateBookAuthor = (bookID, author) => {
-    let updatedBooks = this.state.books;
-
-    updatedBooks.map((book) => {
-      if (book.id == bookID) {
-        book.author = author;
-      }
-    });
-
-    this.setState({ books: updatedBooks });
   };
 
   updateSortOption = (option) => {
@@ -149,10 +141,7 @@ export default class BookManager extends React.Component {
     return (
       <div className="container mb-5">
         <MainTitle />
-        <SearchMenu
-          addBook={this.addBook}
-          updateBookAuthor={this.updateBookAuthor}
-        />
+        <SearchMenu addBook={this.addBook} />
         <SortBar
           currentSortOption={currentSortOption}
           sortOptions={sortOptions}

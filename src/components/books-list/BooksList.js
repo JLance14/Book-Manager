@@ -33,8 +33,6 @@ export default class BooksList extends React.Component {
   };
 
   editBookInfo = (modifiedBook) => {
-    console.log('MODIFIED BOOK', modifiedBook);
-
     let updatedBooks = this.state.books;
 
     updatedBooks.map((book, index) => {

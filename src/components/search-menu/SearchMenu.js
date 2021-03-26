@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 export const openLib = {
-  worksURLPrefix: 'https://openlibrary.org/works/',
+  worksURLPrefix: 'https://openlibrary.org/books/',
   authorsURLPrefix: 'https://openlibrary.org/authors/',
   authorsStringPrefix: '/authors/',
   suffix: '.json',
@@ -20,6 +20,15 @@ export default class SearchMenu extends React.Component {
       description: 'No description available',
       dateAdded: Date.now(),
     };
+  }
+
+  //Partial fix to bug returning previous book name
+  componentDidUpdate() {
+    let authorUnavailableMsg = 'No author available';
+
+    if (this.state.author != authorUnavailableMsg) {
+      this.setState({ author: authorUnavailableMsg });
+    }
   }
 
   handleUserInput = (event) => {
@@ -110,16 +119,11 @@ export default class SearchMenu extends React.Component {
       }
       //Get authors
       else if (propertyName == 'authors') {
-        let bookKey = propertyData[0].author.key;
+        let bookKey = propertyData[0].key[0];
         let authorOLID = bookKey.slice(
           openLib.authorsStringPrefix.length,
           bookKey.length,
         );
-
-        this.fetchAuthorName(authorOLID),
-          (authorName) => {
-            this.props.updateBookAuthor(this.state.olid, authorName);
-          };
       }
       //Get description
       else {

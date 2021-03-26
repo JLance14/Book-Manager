@@ -13,6 +13,14 @@ export default class BooksList extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    if (this.state.books != this.props.books) {
+      this.setState({
+        books: this.props.books,
+      });
+    }
+  }
+
   openDialog = (currentBook) => {
     this.setState({
       currentBook: currentBook,
@@ -67,7 +75,7 @@ export default class BooksList extends React.Component {
                     </h5>
                   </div>
                   <div className="offset-4 col-3">
-                    <h5 className="card-text">Author</h5>
+                    <h5 className="card-text">{book.author}</h5>
                   </div>
                 </div>
 

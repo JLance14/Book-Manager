@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 
-export const openLibUrl = {
-  worksPrefix: 'https://openlibrary.org/works/',
-  authorsPrefix: 'https://openlibrary.org/authors/',
+export const openLib = {
+  worksURLPrefix: 'https://openlibrary.org/works/',
+  authorsURLPrefix: 'https://openlibrary.org/authors/',
+  authorsStringPrefix: '/authors/',
   suffix: '.json',
 };
 
@@ -11,46 +12,45 @@ export default class SearchMenu extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { olid: '' };
-
-    this.handleUserInput = this.handleUserInput.bind(this);
-    this.fetchBookInfo = this.fetchBookInfo.bind(this);
+    this.state = {
+      olid: '',
+      title: 'No title available',
+      author: 'No author available',
+      published: 0,
+      description: 'No description available',
+      dateAdded: Date.now(),
+    };
   }
 
-  handleUserInput(event) {
+  handleUserInput = (event) => {
     this.setState({ olid: event.target.value });
-  }
+  };
 
-  fetchBookInfo() {
+  fetchBookInfo = async () => {
+    //Open Library book URL
     let urlString =
-      openLibUrl.worksPrefix + this.state.olid + openLibUrl.suffix;
+      openLib.worksURLPrefix + this.state.olid + openLib.suffix;
 
-    console.log(urlString);
+    let fetchSuccessful = true;
 
-    axios
+    //Fetch book using OLID
+    await axios
       .get(urlString)
       .then((res) => {
         let bookData = res.data;
 
-        const requiredInfo = [
+        const wantedProperties = [
           'title',
-          'description',
           'authors',
+          'description',
           'created',
         ];
 
         let filteredData = Object.entries(
           bookData,
-        ).filter((property) => requiredInfo.includes(property[0]));
-
-        let newBook = {
-          id: 0,
-          title: 'unknown',
-          published: 0,
-          author: 'unknown',
-          description: 'No description available',
-          dateAdded: Date.now(),
-        };
+        ).filter((property) =>
+          wantedProperties.includes(property[0]),
+        );
 
         let bookProperties = [];
 
@@ -60,58 +60,96 @@ export default class SearchMenu extends React.Component {
           bookProperties.push(bookProperty);
         });
 
-        let newData = this.formatPropertyValues(filteredData);
-
-        console.log('NEW FILTER', newData);
-
-        this.props.addBook(filteredData);
+        this.updatePropertyValues(filteredData);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        alert('Unable to get book information');
+        fetchSuccessful = false;
       });
-  }
 
-  formatPropertyValues(bookProperties) {
-    bookProperties.map((bookProperty) => {
+    if (fetchSuccessful) {
+      const {
+        olid,
+        title,
+        author,
+        published,
+        description,
+        dateAdded,
+      } = this.state;
+
+      let newBook = {
+        id: olid,
+        title: title,
+        author: author,
+        published: published,
+        description: description,
+        dateAdded: dateAdded,
+      };
+
+      this.props.addBook(newBook);
+    }
+  };
+
+  updatePropertyValues = async (bookProperties) => {
+    let title = this.state.title;
+    let author = this.state.author;
+    let published = this.state.published;
+    let description = this.state.description;
+
+    bookProperties.map(async (bookProperty) => {
       let propertyName = bookProperty[0];
       let propertyData = bookProperty[1];
 
-      if (propertyName == 'created') {
-        bookProperty[1] = propertyData.value;
-      } else if (propertyName == 'authors') {
+      //Get book title
+      if (propertyName == 'title') {
+        title = propertyData;
+      }
+      //Get book publishing year
+      else if (propertyName == 'created') {
+        published = propertyData.value.substring(0, 4);
+      }
+      //Get authors
+      else if (propertyName == 'authors') {
         let bookKey = propertyData[0].author.key;
-
-        let authorsStringPrefix = '/authors/';
-        let OLID = bookKey.slice(
-          authorsStringPrefix.length,
+        let authorOLID = bookKey.slice(
+          openLib.authorsStringPrefix.length,
           bookKey.length,
         );
-        let authorName = this.fetchAuthorName(OLID);
-        console.log(authorName);
 
-        console.log('AUTHOR NAME: ', authorName);
-      } else if (propertyName == 'description') {
+        this.fetchAuthorName(authorOLID),
+          (authorName) => {
+            this.props.updateBookAuthor(this.state.olid, authorName);
+          };
+      }
+      //Get description
+      else {
+        description = propertyData.value;
       }
     });
 
-    console.log(bookProperties);
+    this.setState({
+      title: title,
+      author: author,
+      published: published,
+      description: description,
+      dateAdded: Date.now(),
+    });
+  };
 
-    return bookProperties;
-  }
-
-  fetchAuthorName(OLID) {
+  async fetchAuthorName(authorOLID) {
     let urlString =
-      openLibUrl.authorsPrefix + OLID + openLibUrl.suffix;
+      openLib.authorsURLPrefix + authorOLID + openLib.suffix;
 
     axios
       .get(urlString)
       .then((res) => {
         let authorName = res.data.name;
-        return authorName;
+        this.setState({ author: authorName }),
+          () => {
+            return authorName;
+          };
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(() => {});
   }
 
   render() {

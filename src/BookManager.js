@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './style.css';
 import MainTitle from 'components/main-title/MainTitle';
 import SearchMenu from 'components/search-menu/SearchMenu';
@@ -68,12 +67,35 @@ export default class BookManager extends React.Component {
     };
   }
 
-  addBook = (book) => {
-    let updatedBooks = this.state.books.concat(book);
+  addBook = (newBook) => {
+    const { books } = this.state;
+    let bookInList = false;
+
+    books.map((book) => {
+      if (book.id == newBook.id) {
+        bookInList = true;
+        alert('Book already in list');
+      }
+    });
+
+    if (!bookInList) {
+      let updatedBooks = this.state.books.concat(newBook);
+      this.setState({ books: updatedBooks });
+    }
+
+    this.sortBooks();
+  };
+
+  updateBookAuthor = (bookID, author) => {
+    let updatedBooks = this.state.books;
+
+    updatedBooks.map((book) => {
+      if (book.id == bookID) {
+        book.author = author;
+      }
+    });
 
     this.setState({ books: updatedBooks });
-
-    console.log('Added book');
   };
 
   updateSortOption = (option) => {
@@ -83,18 +105,18 @@ export default class BookManager extends React.Component {
         currentSortOption: option,
       },
       () => {
-        this.sortList();
+        this.sortBooks();
       },
     );
   };
 
   componentDidMount() {
     //Sort books on Mount
-    this.sortList();
+    this.sortBooks();
   }
 
   //Update books order
-  sortList() {
+  sortBooks() {
     const { books, currentSortOption } = this.state;
 
     let sortedBooks = books;
@@ -127,14 +149,18 @@ export default class BookManager extends React.Component {
     return (
       <div className="container mb-5">
         <MainTitle />
-        <SearchMenu addBook={this.addBook} />
+        <SearchMenu
+          addBook={this.addBook}
+          updateBookAuthor={this.updateBookAuthor}
+        />
         <SortBar
           currentSortOption={currentSortOption}
           sortOptions={sortOptions}
           updateSortOption={this.updateSortOption}
         />
         <BooksList
-          books={books}
+          //books={books}
+          books={this.state.books}
           currentSortOption={currentSortOption}
           sortOptions={sortOptions}
         />

@@ -110,18 +110,18 @@ export default class EditBook extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button
+            <button
+              className="btn btn-primary mr-2"
               onClick={this.saveBookInfoModification}
-              color="primary"
             >
               Save
-            </Button>
-            <Button
+            </button>
+            <button
+              className="btn btn-danger"
               onClick={this.props.closeDialog}
-              color={'secondary'}
             >
               Cancel
-            </Button>
+            </button>
           </DialogActions>
         </Dialog>
       </Fragment>

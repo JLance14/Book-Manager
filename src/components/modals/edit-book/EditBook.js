@@ -101,6 +101,7 @@ export default class EditBook extends React.Component {
               autoFocus
               margin="dense"
               id="description"
+              className="mb-5"
               label="Description"
               rowsMax={Infinity}
               multiline={true}

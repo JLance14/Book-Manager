@@ -78,7 +78,7 @@ export default class BookManager extends React.Component {
     books.map((book) => {
       if (book.id == newBook.id) {
         bookInList = true;
-        alert('Book already in list');
+        alert('This book is already in the list');
       }
     });
 

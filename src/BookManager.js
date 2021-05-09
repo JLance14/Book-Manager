@@ -14,10 +14,37 @@ const BookManager = () => {
   const [sortOptions, setSortOptions] = useState({});
   const [sortOption, setSortOption] = useState("");
 
+  let addBook = (newBook) => {
+
+    console.log("Inside addBook")
+
+    let bookInList = false;
+
+    books.map((book) => {
+      if (book.id == newBook.id) {
+        bookInList = true;
+        alert('This book is already in the list');
+      }
+    });
+
+    if (!bookInList) {
+      console.log("NEW BOOK")
+      console.log(newBook)
+      setBooks(books => [...books, newBook]);
+      console.log("BOOKSSS")
+      console.log(books)
+      //TODO - remove setstate
+      //this.setState({ books: updatedBooks });
+    }
+
+    //TODO - implement sort
+    //this.sortBooks();
+  };
+
   return (
     <div className="container mb-5">
       <MainTitle />
-      <SearchMenu />
+      <SearchMenu addBook={addBook} />
       {/* <SortBar
         currentSortOption={currentSortOption}
         sortOptions={sortOptions}

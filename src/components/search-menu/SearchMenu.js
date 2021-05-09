@@ -1,198 +1,59 @@
-import React from 'react';
-import axios from 'axios';
-import './style.css';
 
-export const openLib = {
-  worksURLPrefix: 'https://openlibrary.org/books/',
-  authorsURLPrefix: 'https://openlibrary.org/authors/',
-  authorsStringPrefix: '/authors/',
-  suffix: '.json',
-};
+import { useState } from "react";
+import { fetchBook } from 'services/open-lib/fetch-service/fetch-service.js';
 
-export default class SearchMenu extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      olid: '',
-      title: 'No title available',
-      author: 'No author available',
-      published: 0,
-      description: 'No description available',
-      dateAdded: Date.now(),
-    };
-  }
+const SearchMenu = () => {
 
-  //Partial fix to bug returning previous book name
-  componentDidUpdate() {
-    let authorUnavailableMsg = 'No author available';
+    const [olid, setOlid] = useState('');
+    const [title, setTitle] = useState('No title available');
+    const [author, setAuthor] = useState('No author available');
+    const [published, setPublished] = useState(0);
+    const [description, setDescription] = useState('No description available');
+    const [dateAdded, setDateAdded] = useState(Date.now());
 
-    if (this.state.author != authorUnavailableMsg) {
-      this.setState({ author: authorUnavailableMsg });
+    getBookInfo = () => {
+        let bookData = fetchBook(olid)
+
+        //CALL all the setstate methods
     }
-  }
 
-  handleUserInput = (event) => {
-    this.setState({ olid: event.target.value });
-  };
-
-  fetchBookInfo = async () => {
-    //Open Library book URL
-    let urlString =
-      openLib.worksURLPrefix + this.state.olid + openLib.suffix;
-
-    let fetchSuccessful = true;
-
-    //Fetch book using OLID
-    await axios
-      .get(urlString)
-      .then((res) => {
-        let bookData = res.data;
-
-        const wantedProperties = [
-          'title',
-          'authors',
-          'description',
-          'created',
-        ];
-
-        let filteredData = Object.entries(
-          bookData,
-        ).filter((property) =>
-          wantedProperties.includes(property[0]),
-        );
-
-        let bookProperties = [];
-
-        Object.entries(filteredData).map((property) => {
-          let bookProperty = property[1];
-
-          bookProperties.push(bookProperty);
-        });
-
-        this.updatePropertyValues(filteredData);
-      })
-      .catch(() => {
-        alert('Unable to get book information');
-        fetchSuccessful = false;
-      });
-
-    if (fetchSuccessful) {
-      const {
-        olid,
-        title,
-        author,
-        published,
-        description,
-        dateAdded,
-      } = this.state;
-
-      let newBook = {
-        id: olid,
-        title: title,
-        author: author,
-        published: published,
-        description: description,
-        dateAdded: dateAdded,
-      };
-
-      this.props.addBook(newBook);
-    }
-  };
-
-  updatePropertyValues = async (bookProperties) => {
-    let title = this.state.title;
-    let author = this.state.author;
-    let published = this.state.published;
-    let description = this.state.description;
-
-    bookProperties.map(async (bookProperty) => {
-      let propertyName = bookProperty[0];
-      let propertyData = bookProperty[1];
-
-      //Get book title
-      if (propertyName == 'title') {
-        title = propertyData;
-      }
-      //Get book publishing year
-      else if (propertyName == 'created') {
-        published = propertyData.value.substring(0, 4);
-      }
-      //Get authors
-      else if (propertyName == 'authors') {
-        let bookKey = propertyData[0].key[0];
-        let authorOLID = bookKey.slice(
-          openLib.authorsStringPrefix.length,
-          bookKey.length,
-        );
-      }
-      //Get description
-      else {
-        description = propertyData.value;
-      }
-    });
-
-    this.setState({
-      title: title,
-      author: author,
-      published: published,
-      description: description,
-      dateAdded: Date.now(),
-    });
-  };
-
-  async fetchAuthorName(authorOLID) {
-    let urlString =
-      openLib.authorsURLPrefix + authorOLID + openLib.suffix;
-
-    axios
-      .get(urlString)
-      .then((res) => {
-        let authorName = res.data.name;
-        this.setState({ author: authorName }),
-          () => {
-            return authorName;
-          };
-      })
-      .catch(() => {});
-  }
-
-  render() {
     return (
-      <>
-        <div className="row">
-          <div className="col-9 mb-2 text-center">
-            <h3>Add a book by Open Library ID Number</h3>
-          </div>
-        </div>
+        <div className="search-menu">
+            <div className="row">
+                <div className="col-9 mb-2 text-center">
+                    <h3>Add a book by Open Library ID Number</h3>
+                </div>
+            </div>
 
-        <div className="row">
-          <div className="col-9">
-            <input
-              type="text"
-              className="form-control text-center"
-              id="add_book_input"
-              aria-describedby="OLID"
-              placeholder="OLID"
-              value={this.state.olid}
-              onChange={this.handleUserInput}
-            />
-          </div>
-          <div
-            className="col-3 d-flex align-items-center"
-            id="add_book"
-          >
-            <button
-              type="button"
-              className="btn btn-primary px-5 offset-2 rounded-lg"
-              id="add_book_btn"
-              onClick={this.fetchBookInfo}
-            >
-              Add
-            </button>
-          </div>
+            <div className="row">
+                <div className="col-9">
+                    <input
+                        type="text"
+                        name="olid"
+                        className="search-menu__add-book-input form-control text-center"
+                        id="add_book_input"
+                        aria-describedby="OLID"
+                        placeholder="OLID"
+                        value={olid}
+                        onChange={e => setOlid(e.target.value)}
+                    />
+                </div>
+                <div
+                    className="search-menu__add-book-div col-3 d-flex align-items-center"
+                >
+                    <button
+                        type="button"
+                        className="search-menu__add-book-btn btn btn-primary px-5 offset-2 rounded-lg"
+                        //TODO MANAGE FETCH
+                        onClick={() => fetchBook(olid)}
+                    >
+                        Add
+                  </button>
+                </div>
+            </div>
         </div>
-      </>
     );
-  }
 }
+
+export default SearchMenu;

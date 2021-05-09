@@ -3,10 +3,13 @@ import { url_constants, wanted_properties } from './ol-constants';
 
 export const fetchBook = async (olid) => {
 
+  console.log("OLID :", olid)
+
   //Open Library book URL
   //ex: https://openlibrary.org/books/ + OL10434104Z + .json
   let urlString = url_constants.worksURLPrefix + olid + url_constants.suffix;
-  let fetchSuccessful = true;
+
+  let bookProperties = []
 
   //Fetch book using OLID
   await axios
@@ -21,21 +24,17 @@ export const fetchBook = async (olid) => {
         wanted_properties.includes(property[0]),
       );
 
-      let bookProperties = [];
-
       //Get value from desired book keys (ex: title, description, authors, created)
       Object.entries(filteredData).map((property) => {
         let bookProperty = property[1];
 
         bookProperties.push(bookProperty);
       });
-
-      return bookProperties;
     })
     .catch(() => {
       alert('Unable to get book information');
-      fetchSuccessful = false;
     });
+  return bookProperties;
 };
 
 //TODO - fetch author info
@@ -43,8 +42,6 @@ export const fetchAuthor = async (url, bookProperties) => {
   //Open Library book URL
   // let urlString =
   //   openLib.worksURLPrefix + this.state.olid + openLib.suffix;
-
-  let fetchSuccessful = true;
 
   //Fetch author
   await axios
@@ -56,4 +53,5 @@ export const fetchAuthor = async (url, bookProperties) => {
       alert('Unable to get book information');
       fetchSuccessful = false;
     });
+  //return author
 };

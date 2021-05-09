@@ -12,8 +12,9 @@ const SearchMenu = () => {
     const [description, setDescription] = useState('No description available');
     const [dateAdded, setDateAdded] = useState(Date.now());
 
-    getBookInfo = () => {
-        let bookData = fetchBook(olid)
+    let getBookInfo = async (olid) => {
+        let bookData = await fetchBook(olid)
+        console.log(bookData)
 
         //CALL all the setstate methods
     }
@@ -46,7 +47,7 @@ const SearchMenu = () => {
                         type="button"
                         className="search-menu__add-book-btn btn btn-primary px-5 offset-2 rounded-lg"
                         //TODO MANAGE FETCH
-                        onClick={() => fetchBook(olid)}
+                        onClick={() => getBookInfo(olid)}
                     >
                         Add
                   </button>

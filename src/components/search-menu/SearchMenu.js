@@ -1,72 +1,61 @@
 
 import { useState } from "react";
-import { fetchBook } from 'services/open-lib/fetch-service/fetch-service.js';
+import { fetchBook, fetchAuthor } from 'services/open-lib/fetch-service/fetch-service.js';
 import { url_constants } from 'services/open-lib/fetch-service/ol-constants';
-
 
 const SearchMenu = (props) => {
 
     const [olid, setOlid] = useState('');
-    const [title, setTitle] = useState('No title available');
-    const [author, setAuthor] = useState('No author available');
-    const [published, setPublished] = useState(0);
-    const [description, setDescription] = useState('No description available');
-    const [dateAdded, setDateAdded] = useState(Date.now());
 
     let getBook = async (olid) => {
         let bookData = await fetchBook(olid)
-        console.log(bookData)
-
-        if (bookData) {
-            updateBookProperties(bookData)
-        }
-
-        let newBook = {
-            id: olid,
-            title: title,
-            author: author,
-            published: published,
-            description: description,
-            dateAdded: dateAdded,
-        };
-
-
-        props.addBook(newBook);
+        let bookProperties = await getBookProperties(bookData)
+        props.addBook(bookProperties);
     }
 
-    let updateBookProperties = async (bookProperties) => {
+    let getBookProperties = async (bookProperties) => {
 
-        bookProperties.map(async (bookProperty) => {
+        let book = {
+            title: '',
+            published: '',
+            author: '',
+            description: '',
+            dateAdded: ''
+        }
+
+        await bookProperties.map(async (bookProperty) => {
             let propertyName = bookProperty[0];
             let propertyData = bookProperty[1];
 
             //Get book title
             if (propertyName == 'title') {
-                setTitle(propertyData);
+                book.title = propertyData
             }
             //Get book publishing year
             else if (propertyName == 'created') {
                 let publishingYear = propertyData.value.substring(0, 4)
-                setPublished(publishingYear);
+                book.published = publishingYear;
             }
-            //Get authors
+            //Get author
             else if (propertyName == 'authors') {
-                let bookKey = propertyData[0].key[0];
+                let authorEndpoint = propertyData[0].key;
 
-                //Only get OLID part of string
-                let authorOLID = bookKey.slice(
+                //Only get OLID part of string /authors/OLID
+                let authorOLID = authorEndpoint.slice(
                     url_constants.authorsStringPrefix.length,
-                    bookKey.length,
+                    authorEndpoint.length,
                 );
-                //TODO - SET AUTHOR
+                book.author = await fetchAuthor(authorOLID);
             }
             //Get description
             else {
-                setDescription(propertyData.value);
+                book.description = propertyData;
             }
         });
 
-        setDateAdded(Date.now())
+        book.dateAdded = Date.now()
+        book.olid = bookProperties.olid
+        return book;
     };
 
     return (

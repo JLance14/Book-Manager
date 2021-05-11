@@ -3,11 +3,9 @@ import { url_constants, wanted_properties } from './ol-constants';
 
 export const fetchBook = async (olid) => {
 
-  console.log("OLID :", olid)
-
   //Open Library book URL
   //ex: https://openlibrary.org/books/ + OL10434104Z + .json
-  let urlString = url_constants.worksURLPrefix + olid + url_constants.suffix;
+  let urlString = url_constants.booksURLPrefix + olid + url_constants.jsonExtension;
 
   let bookProperties = []
 
@@ -34,24 +32,32 @@ export const fetchBook = async (olid) => {
     .catch(() => {
       alert('Unable to get book information');
     });
+  bookProperties.olid = olid;
   return bookProperties;
 };
 
-//TODO - fetch author info
-export const fetchAuthor = async (url, bookProperties) => {
-  //Open Library book URL
-  // let urlString =
-  //   openLib.worksURLPrefix + this.state.olid + openLib.suffix;
+export const fetchAuthor = async (olid) => {
+
+  //Open Library author URL
+  //ex: https://openlibrary.org/authors/ + OL6548935A + .json
+  let urlString =
+    url_constants.authorsURLPrefix + olid + url_constants.jsonExtension;
+
+  let authorName = ''
 
   //Fetch author
   await axios
-    .get(url)
+    .get(urlString)
     .then((res) => {
-
+      let authorInfo = res.data;
+      if (authorInfo.name) {
+        authorName = authorInfo.name;
+      }
     })
     .catch(() => {
       alert('Unable to get book information');
       fetchSuccessful = false;
     });
-  //return author
+
+  return authorName
 };

@@ -1,8 +1,8 @@
 export const url_constants = {
-  "worksURLPrefix": 'https://openlibrary.org/books/',
+  "booksURLPrefix": 'https://openlibrary.org/books/',
   "authorsURLPrefix": 'https://openlibrary.org/authors/',
   authorsStringPrefix: '/authors/',
-  suffix: '.json',
+  jsonExtension: '.json',
 };
 
 export const wanted_properties = [

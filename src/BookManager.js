@@ -10,31 +10,26 @@ import SearchMenu from 'components/search-menu/SearchMenu';
 const BookManager = () => {
 
   const [books, setBooks] = useState([]);
-  const [olid, setOlid] = useState("");
-  const [sortOptions, setSortOptions] = useState({});
-  const [sortOption, setSortOption] = useState("");
+  //const [olid, setOlid] = useState("");
+  //const [sortOptions, setSortOptions] = useState({});
+  //const [sortOption, setSortOption] = useState("");
 
   let addBook = (newBook) => {
 
-    console.log("Inside addBook")
-
     let bookInList = false;
 
+    //Verifies that book isn't already in books array
     books.map((book) => {
-      if (book.id == newBook.id) {
+      if (book.olid == newBook.olid) {
         bookInList = true;
-        alert('This book is already in the list');
       }
     });
 
+    //Add book if not already in list
     if (!bookInList) {
-      console.log("NEW BOOK")
-      console.log(newBook)
       setBooks(books => [...books, newBook]);
-      console.log("BOOKSSS")
-      console.log(books)
-      //TODO - remove setstate
-      //this.setState({ books: updatedBooks });
+    } else {
+      alert('This book is already in the list');
     }
 
     //TODO - implement sort

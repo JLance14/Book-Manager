@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import './style.css';
 import MainTitle from 'components/main-title/MainTitle';
 import SearchMenu from 'components/search-menu/SearchMenu';
+import BooksList from 'components/books-list/BooksList';
 // import BooksList from 'components/books-list/BooksList';
 // import SortBar from 'components/sort-bar/SortBar';
 //import {sortOptions} from 'constants/constants.js';
@@ -44,13 +45,12 @@ const BookManager = () => {
         currentSortOption={currentSortOption}
         sortOptions={sortOptions}
         updateSortOption={this.updateSortOption}
-      />
-      <BooksList
-        //books={books}
-        books={this.state.books}
-        currentSortOption={currentSortOption}
-        sortOptions={sortOptions}
       /> */}
+      <BooksList
+        books={books}
+      //currentSortOption={currentSortOption}
+      //sortOptions={sortOptions}
+      />
     </div>
   );
 }

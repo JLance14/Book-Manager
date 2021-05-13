@@ -3,9 +3,9 @@ import './style.css';
 import MainTitle from 'components/main-title/MainTitle';
 import SearchMenu from 'components/search-menu/SearchMenu';
 import BooksList from 'components/books-list/BooksList';
-// import BooksList from 'components/books-list/BooksList';
+import { orderObjectsService } from 'services/global/order-objects';
+import { sortOptions } from 'constants/constants';
 // import SortBar from 'components/sort-bar/SortBar';
-//import {sortOptions} from 'constants/constants.js';
 
 
 const BookManager = () => {
@@ -18,6 +18,7 @@ const BookManager = () => {
   let addBook = (newBook) => {
 
     let bookInList = false;
+    let bookIsValid = newBook && newBook.olid && newBook.olid !== undefined
 
     //Verifies that book isn't already in books array
     books.map((book) => {
@@ -28,7 +29,7 @@ const BookManager = () => {
 
     //Add book if not already in list
     if (!bookInList) {
-      setBooks(books => [...books, newBook]);
+      bookIsValid && setBooks(books => [...books, newBook]);
     } else {
       alert('This book is already in the list');
     }
@@ -42,9 +43,8 @@ const BookManager = () => {
       <MainTitle />
       <SearchMenu addBook={addBook} />
       {/* <SortBar
-        currentSortOption={currentSortOption}
-        sortOptions={sortOptions}
-        updateSortOption={this.updateSortOption}
+        currentSortOption={sortOption}
+        updateSortOption={setSortOption}
       /> */}
       <BooksList
         books={books}

@@ -1,14 +1,14 @@
 
 import { useState } from "react";
-import { fetchBook, fetchAuthor } from 'services/open-lib/fetch-service/fetch-service.js';
-import { url_constants } from 'services/open-lib/fetch-service/ol-constants';
+import { fetchBookService, fetchAuthorService } from 'services/open-lib/fetch-service/fetch-service';
+import { url_constants } from 'services/open-lib/fetch-service/constants/constants';
 
 const SearchMenu = (props) => {
 
     const [olid, setOlid] = useState('');
 
     let getBook = async (olid) => {
-        let bookData = await fetchBook(olid)
+        let bookData = await fetchBookService(olid)
         let bookProperties = await getBookProperties(bookData)
         props.addBook(bookProperties);
     }
@@ -45,7 +45,7 @@ const SearchMenu = (props) => {
                     url_constants.authorsStringPrefix.length,
                     authorEndpoint.length,
                 );
-                book.author = await fetchAuthor(authorOLID);
+                book.author = await fetchAuthorService(authorOLID);
             }
             //Get description
             else {

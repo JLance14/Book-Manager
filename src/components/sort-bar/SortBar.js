@@ -1,23 +1,29 @@
 import { useState } from "react";
-import { orderObjectsService } from 'services/global/order-objects';
 import { sortOptions } from 'constants/constants';
 
 
 export const SortBar = (props) => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState('');
 
-    toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+    const { currentSortOption, updateSortOption, sortBooks } = props;
 
-    const { currentSortOption } = props;
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const menuClass = `dropdown-menu${isDropdownOpen ? ' show' : ''}`;
+
+    let toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+    let onClick = (value) => {
+        updateSortOption(value);
+        sortBooks(value)
+    }
 
     return (
         <div className="row my-5">
             <div className="col-7 offset-9">
-                <div class="dropdown" onClick={this.toggleDropdown}>
+                <div class="dropdown" onClick={toggleDropdown}>
                     <button
-                        className="btn btn-danger dropdown-toggle"
+                        className="btn btn-danger dropdown-toggle dropdownMenuButton"
                         type="button"
-                        id="dropdownMenuButton"
                         data-toggle="dropdown"
                         aria-haspopup="true"
                     >
@@ -32,7 +38,7 @@ export const SortBar = (props) => {
                                 className="dropdown-item"
                                 href="#nogo"
                                 key={index}
-                                onClick={() => orderObjectsService(value)}
+                                onClick={() => onClick(value)}
                             >
                                 {value}
                             </a>
@@ -43,3 +49,5 @@ export const SortBar = (props) => {
         </div>
     )
 }
+
+export default SortBar;

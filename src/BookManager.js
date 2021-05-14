@@ -5,15 +5,13 @@ import SearchMenu from 'components/search-menu/SearchMenu';
 import BooksList from 'components/books-list/BooksList';
 import { orderObjectsService } from 'services/global/order-objects';
 import { sortOptions } from 'constants/constants';
-// import SortBar from 'components/sort-bar/SortBar';
-
+import SortBar from 'components/sort-bar/SortBar';
 
 const BookManager = () => {
 
   const [books, setBooks] = useState([]);
   //const [olid, setOlid] = useState("");
-  //const [sortOptions, setSortOptions] = useState({});
-  //const [sortOption, setSortOption] = useState("");
+  const [sortOption, setSortOption] = useState(sortOptions.ORDER_ADDED);
 
   let addBook = (newBook) => {
 
@@ -29,27 +27,30 @@ const BookManager = () => {
 
     //Add book if not already in list
     if (!bookInList) {
+      //Add book if valid
       bookIsValid && setBooks(books => [...books, newBook]);
+      //sort books after adding new one
+      sortBooks(sortOption)
     } else {
       alert('This book is already in the list');
     }
-
-    //TODO - implement sort
-    //this.sortBooks();
   };
+
+  let sortBooks = (sortingOption) => {
+    orderObjectsService(books, sortingOption)
+  }
 
   return (
     <div className="container mb-5">
       <MainTitle />
       <SearchMenu addBook={addBook} />
-      {/* <SortBar
+      <SortBar
         currentSortOption={sortOption}
         updateSortOption={setSortOption}
-      /> */}
+        sortBooks={sortBooks}
+      />
       <BooksList
         books={books}
-      //currentSortOption={currentSortOption}
-      //sortOptions={sortOptions}
       />
     </div>
   );

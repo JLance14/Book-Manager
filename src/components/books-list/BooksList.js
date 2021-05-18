@@ -24,7 +24,7 @@ export const BooksList = (props) => {
         let updatedBooks = books;
 
         updatedBooks.map((book, index) => {
-            if (book.id == modifiedBook.id) {
+            if (book.olid == modifiedBook.olid) {
                 updatedBooks[index] = modifiedBook;
             }
         });

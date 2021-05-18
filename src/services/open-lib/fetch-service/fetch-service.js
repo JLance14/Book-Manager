@@ -1,9 +1,9 @@
 import axios from 'axios';
+import { clearConfigCache } from 'prettier';
 import { url_constants, wanted_properties } from './constants/constants';
 
 export const fetchBookService = async (olid) => {
 
-    //Open Library book URL
     //ex: https://openlibrary.org/books/ + OL10434104Z + .json
     let urlString = url_constants.booksURLPrefix + olid + url_constants.jsonExtension;
 
@@ -12,7 +12,7 @@ export const fetchBookService = async (olid) => {
     //Fetch book using OLID
     await axios
         .get(urlString)
-        .then((res) => {
+        .then(async (res) => {
             let bookData = res.data;
 
             //filter data to get key:value of desired book fields (ex: title, description, authors, created)
@@ -22,12 +22,18 @@ export const fetchBookService = async (olid) => {
                 wanted_properties.includes(property[0]),
             );
 
+            let authorInfo = ''
+            let authorOLID = ""
+
             //Get value from desired book keys (ex: title, description, authors, created)
             Object.entries(filteredData).map((property) => {
                 let bookProperty = property[1];
-
                 bookProperties.push(bookProperty);
             });
+
+            bookProperties.olid = olid;
+            return bookProperties;
+
         })
         .catch(() => {
             alert('Unable to get book information');
@@ -56,7 +62,6 @@ export const fetchAuthorService = async (olid) => {
         })
         .catch(() => {
             alert('Unable to get book information');
-            fetchSuccessful = false;
         });
 
     return authorName

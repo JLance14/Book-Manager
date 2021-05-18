@@ -7,12 +7,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 
 export const EditBook = (props) => {
-  // const [olid, setOlid] = useState('');
-  // const [title, setTitle] = useState('');
-  // const [author, setAuthor] = useState('');
-  // const [published, setPublished] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [dateAdded, setDateAdded] = useState('');
   const [olid, setOlid] = useState(props.bookInfo.olid);
   const [title, setTitle] = useState(props.bookInfo.title);
   const [author, setAuthor] = useState(props.bookInfo.author);

@@ -21,7 +21,8 @@ export const orderObjectsService = (objArray, sortOrder = sortOptions.TITLE_ASCE
     } else if (isAddedDateSort) {
         //return books ordered by added date
         objArray.sort(function (a, b) {
-            return b.dateAdded - a.dateAdded;
+            //return b.dateAdded - a.dateAdded;
+            return a.dateAdded - b.dateAdded;
         });
     }
     return objArray;

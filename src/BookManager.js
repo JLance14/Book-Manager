@@ -10,16 +10,15 @@ import SortBar from 'components/sort-bar/SortBar';
 const BookManager = () => {
 
   const [books, setBooks] = useState([]);
-  //const [olid, setOlid] = useState("");
   const [sortOption, setSortOption] = useState(sortOptions.ORDER_ADDED);
 
-  let addBook = (newBook) => {
+  let addBook = async (newBook) => {
 
     let bookInList = false;
     let bookIsValid = newBook && newBook.olid && newBook.olid !== undefined
 
     //Verifies that book isn't already in books array
-    books.map((book) => {
+    newBook && newBook.author && books.map((book) => {
       if (book.olid == newBook.olid) {
         bookInList = true;
       }
@@ -31,8 +30,6 @@ const BookManager = () => {
       bookIsValid && setBooks(books => [...books, newBook]);
       //sort books after adding new one
       sortBooks(sortOption)
-    } else {
-      alert('This book is already in the list');
     }
   };
 

@@ -8,7 +8,7 @@ const SearchMenu = (props) => {
     const [olid, setOlid] = useState('');
 
     let getBook = async (olid) => {
-        let bookData = await fetchBookService(olid)
+        let bookData = await fetchBookService(olid, props.authors, props.setAuthors)
         let bookProperties = await getBookProperties(bookData)
         props.addBook(bookProperties);
     }

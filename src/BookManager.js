@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './style.css';
 import MainTitle from 'components/main-title/MainTitle';
 import SearchMenu from 'components/search-menu/SearchMenu';
@@ -10,6 +10,7 @@ import SortBar from 'components/sort-bar/SortBar';
 const BookManager = () => {
 
   const [books, setBooks] = useState([]);
+  const [authors, setAuthors] = useState({});
   const [sortOption, setSortOption] = useState(sortOptions.ORDER_ADDED);
 
   let addBook = async (newBook) => {
@@ -18,7 +19,7 @@ const BookManager = () => {
     let bookIsValid = newBook && newBook.olid && newBook.olid !== undefined
 
     //Verifies that book isn't already in books array
-    newBook && newBook.author && books.map((book) => {
+    newBook && books.map((book) => {
       if (book.olid == newBook.olid) {
         bookInList = true;
       }
@@ -40,7 +41,10 @@ const BookManager = () => {
   return (
     <div className="container mb-5">
       <MainTitle />
-      <SearchMenu addBook={addBook} />
+      <SearchMenu
+        addBook={addBook}
+        setAuthors={setAuthors}
+        authors={authors} />
       <SortBar
         currentSortOption={sortOption}
         updateSortOption={setSortOption}
@@ -48,6 +52,9 @@ const BookManager = () => {
       />
       <BooksList
         books={books}
+        setBooks={setBooks}
+        authors={authors}
+        setAuthors={setAuthors}
       />
     </div>
   );

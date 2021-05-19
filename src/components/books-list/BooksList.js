@@ -3,11 +3,8 @@ import './style.css';
 import EditBook from 'components/modals/edit-book/EditBook';
 
 export const BooksList = (props) => {
-    const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState({})
     const [isDialogShowing, setIsDialogShowing] = useState(false)
-
-    if (props.books != books) setBooks(props.books);
 
     let openDialog = (currentBook) => {
         setSelectedBook(currentBook);
@@ -29,8 +26,10 @@ export const BooksList = (props) => {
             }
         });
 
-        setBooks(updatedBooks);
+        props.setBooks(updatedBooks);
     };
+
+    const { books, authors } = props;
 
     return (
         <>
@@ -55,9 +54,12 @@ export const BooksList = (props) => {
                                         {book.title} ({book.published})
                                     </h5>
                                 </div>
-                                <div className="offset-2 col-3">
-                                    <h5 className="card-text">{book.author}</h5>
-                                </div>
+                                {/* display authors if exist */}
+                                {authors && authors[book.olid] && (
+                                    <div className="offset-2 col-3">
+                                        <h5 className="card-text">{authors[book.olid]}</h5>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="row">
